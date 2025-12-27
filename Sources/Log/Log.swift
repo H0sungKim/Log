@@ -8,6 +8,7 @@
 import Foundation
 import os
 
+/// Centralized Custom Logging System
 public final class Log {
     
     private static let subsystem: String = Bundle.main.bundleIdentifier ?? "com.hosungkim.log"
@@ -26,24 +27,30 @@ public final class Log {
         case custom(Closure)
     }
     
+    /// Logs a debug message.
+    /// - Note: These logs are only compiled and executed in DEBUG builds.
     public static func d(_ objects: Any?..., separator: String = " ", method: OutputMethod = .oslog, filename: String = #file, line: Int = #line, funcName: String = #function) {
         #if DEBUG
         log(objects, separator: separator, level: .debug, method: method, filename: filename, line: line, funcName: funcName)
         #endif
     }
     
+    /// Logs an info message.
     public static func i(_ objects: Any?..., separator: String = " ", method: OutputMethod = .oslog, filename: String = #file, line: Int = #line, funcName: String = #function) {
         log(objects, separator: separator, level: .info, method: method, filename: filename, line: line, funcName: funcName)
     }
     
+    /// Logs a notice message.
     public static func n(_ objects: Any?..., separator: String = " ", method: OutputMethod = .oslog, filename: String = #file, line: Int = #line, funcName: String = #function) {
         log(objects, separator: separator, level: .notice, method: method, filename: filename, line: line, funcName: funcName)
     }
     
+    /// Logs an error message.
     public static func e(_ objects: Any?..., separator: String = " ", method: OutputMethod = .oslog, filename: String = #file, line: Int = #line, funcName: String = #function) {
         log(objects, separator: separator, level: .error, method: method, filename: filename, line: line, funcName: funcName)
     }
     
+    /// Logs a fault message.
     public static func f(_ objects: Any?..., separator: String = " ", method: OutputMethod = .oslog, filename: String = #file, line: Int = #line, funcName: String = #function) {
         log(objects, separator: separator, level: .fault, method: method, filename: filename, line: line, funcName: funcName)
     }
