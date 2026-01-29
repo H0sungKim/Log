@@ -9,7 +9,7 @@ import Foundation
 import os
 
 /// Centralized Custom Logging System
-public final class Log {
+public enum Log {
     
     private static let enabled: Bool = true
     
@@ -21,8 +21,6 @@ public final class Log {
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
         return dateFormatter
     }()
-    
-    private init() { }
     
     /// Logs a debug message.
     /// - Note: These logs are only compiled and executed in DEBUG builds.
