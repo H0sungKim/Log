@@ -9,6 +9,7 @@ import Foundation
 import os
 
 /// Centralized Custom Logging System
+@available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
 public enum Log {
     
     private static let enabled: Bool = true
@@ -53,7 +54,7 @@ public enum Log {
     private static func log(_ objects: [Any?], separator: String, level: Level, method: OutputMethod, filename: String, line: Int, funcName: String) {
         guard enabled else { return }
         let objectsMessage: String = objects.map({ "\($0 ?? "nil")" }).joined(separator: separator)
-        let message: String = "\(dateFormatter.string(from: Date())) [\(level.rawValue)] [\(getThreadName())] [\(getFileName(filename)):\(line)] \(funcName) : \(objectsMessage)"
+        let message: String = "\(dateFormatter.string(from: Date())) [\(level.rawValue)] [\(getThreadName())] [\(getFileName(filename)):\(line)] [\(funcName)]\n\(objectsMessage)"
         switch method {
         case .oslog:
             logger.log(level: level.osLogType, "\(message)")
