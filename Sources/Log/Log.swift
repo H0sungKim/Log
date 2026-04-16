@@ -25,29 +25,29 @@ public enum Log {
     
     /// Logs a debug message.
     /// - Note: These logs are only compiled and executed in DEBUG builds.
-    public static func d(_ objects: Any?..., separator: String = " ", method: OutputMethod = .oslog, filename: String = #file, line: Int = #line, funcName: String = #function) {
+    public static func d(_ objects: Any?..., separator: String = " ", method: OutputMethod = .oslog, filename: String = #fileID, line: Int = #line, funcName: String = #function) {
         #if DEBUG
         log(objects, separator: separator, level: .debug, method: method, filename: filename, line: line, funcName: funcName)
         #endif
     }
     
     /// Logs an info message.
-    public static func i(_ objects: Any?..., separator: String = " ", method: OutputMethod = .oslog, filename: String = #file, line: Int = #line, funcName: String = #function) {
+    public static func i(_ objects: Any?..., separator: String = " ", method: OutputMethod = .oslog, filename: String = #fileID, line: Int = #line, funcName: String = #function) {
         log(objects, separator: separator, level: .info, method: method, filename: filename, line: line, funcName: funcName)
     }
     
     /// Logs a notice message.
-    public static func n(_ objects: Any?..., separator: String = " ", method: OutputMethod = .oslog, filename: String = #file, line: Int = #line, funcName: String = #function) {
+    public static func n(_ objects: Any?..., separator: String = " ", method: OutputMethod = .oslog, filename: String = #fileID, line: Int = #line, funcName: String = #function) {
         log(objects, separator: separator, level: .notice, method: method, filename: filename, line: line, funcName: funcName)
     }
     
     /// Logs an error message.
-    public static func e(_ objects: Any?..., separator: String = " ", method: OutputMethod = .oslog, filename: String = #file, line: Int = #line, funcName: String = #function) {
+    public static func e(_ objects: Any?..., separator: String = " ", method: OutputMethod = .oslog, filename: String = #fileID, line: Int = #line, funcName: String = #function) {
         log(objects, separator: separator, level: .error, method: method, filename: filename, line: line, funcName: funcName)
     }
     
     /// Logs a fault message.
-    public static func f(_ objects: Any?..., separator: String = " ", method: OutputMethod = .oslog, filename: String = #file, line: Int = #line, funcName: String = #function) {
+    public static func f(_ objects: Any?..., separator: String = " ", method: OutputMethod = .oslog, filename: String = #fileID, line: Int = #line, funcName: String = #function) {
         log(objects, separator: separator, level: .fault, method: method, filename: filename, line: line, funcName: funcName)
     }
     
@@ -90,7 +90,7 @@ public enum Log {
             case .info:
                 return .info
             case .notice:
-                return .default
+                return .`default`
             case .error:
                 return .error
             case .fault:
@@ -100,16 +100,20 @@ public enum Log {
     }
     
     private static func getFileName(_ file: String) -> String {
-        return file.components(separatedBy: "/").last ?? file
+        return file.components(separatedBy: "/").last ?? URL(filePath: file).lastPathComponent
     }
     
     private static func getThreadName() -> String {
         if Thread.current.isMainThread {
             return "Main"
-        } else {
-            // <NSThread: 0x600001709040>{number = 6, name = (null)}
-            let threadNumber = Thread.current.description.split(separator: ",").first!.split(separator: "=").last!.trimmingCharacters(in: .whitespaces)
-            return "\(threadNumber)"
         }
+        // <NSThread: 0x600001709040>{number = 6, name = (null)}
+        guard let threadNumber = Thread.current.description
+            .split(separator: ",").first?
+            .split(separator: "=").last?
+            .trimmingCharacters(in: .whitespaces) else {
+            return "BG"
+        }
+        return "T\(threadNumber)"
     }
 }
